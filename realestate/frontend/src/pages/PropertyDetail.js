@@ -168,6 +168,24 @@ export default function PropertyDetail() {
             </div>
           )}
 
+
+
+          {/* Location Map */}
+          <div style={{ marginBottom: '32px' }}>
+            <h3 style={{ fontSize: '26px', fontWeight: 400, marginBottom: '14px' }}>Location</h3>
+            <div className="card" style={{ overflow: 'hidden' }}>
+              <iframe
+                title="Property Location"
+                width="100%"
+                height="320"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps?q=${property.latitude && property.longitude ? `${property.latitude},${property.longitude}` : encodeURIComponent(`${property.address || ''} ${property.city || ''}`)}&output=embed`}
+              />
+            </div>
+          </div>
+
           {/* Reviews */}
           <div style={{ marginBottom: '32px' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 500, marginBottom: '20px', paddingBottom: '8px', borderBottom: '1px solid var(--border)' }}>Reviews & Ratings</h3>

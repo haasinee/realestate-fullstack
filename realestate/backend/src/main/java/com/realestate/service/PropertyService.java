@@ -72,6 +72,8 @@ public class PropertyService {
                 .city(req.getCity())
                 .state(req.getState())
                 .pincode(req.getPincode())
+                .latitude(req.getLatitude())
+                .longitude(req.getLongitude())
                 .amenities(req.getAmenities())
                 .isFeatured(req.getIsFeatured() != null ? req.getIsFeatured() : false)
                 .agentName(req.getAgentName())
@@ -98,6 +100,8 @@ public class PropertyService {
         p.setCity(req.getCity());
         p.setState(req.getState());
         p.setPincode(req.getPincode());
+        p.setLatitude(req.getLatitude());
+        p.setLongitude(req.getLongitude());
         p.setAmenities(req.getAmenities());
         p.setIsFeatured(req.getIsFeatured() != null ? req.getIsFeatured() : false);
         p.setAgentName(req.getAgentName());
@@ -152,6 +156,8 @@ public class PropertyService {
         r.setCity(p.getCity());
         r.setState(p.getState());
         r.setPincode(p.getPincode());
+        r.setLatitude(p.getLatitude());
+        r.setLongitude(p.getLongitude());
         r.setAmenities(p.getAmenities());
         r.setIsFeatured(p.getIsFeatured());
         r.setAgentName(p.getAgentName());

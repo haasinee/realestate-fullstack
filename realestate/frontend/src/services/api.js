@@ -53,3 +53,6 @@ export const updateBookingStatus = (id, status) =>
 export const cancelBooking = (id) => API.put(`/bookings/${id}/cancel`);
 
 export default API;
+
+// Profile
+export const getProfile = () => API.get('/users/profile');

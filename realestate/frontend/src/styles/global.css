@@ -154,3 +154,18 @@ tr:hover td { background: var(--mist); }
   .admin-sidebar { display: none; }
   .navbar-links { gap: 1rem; }
 }
+
+.app-shell { display: grid; grid-template-columns: 200px 1fr; min-height: calc(100vh - 64px); }
+.app-sidebar { background: #fff; border-right: 1px solid var(--border); padding: 20px 12px; position: sticky; top: 64px; height: calc(100vh - 64px); }
+.sidebar-title { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #999; margin-bottom: 10px; }
+.sidebar-link { display: block; padding: 10px 12px; border-radius: 4px; font-size: 13px; color: var(--slate); }
+.sidebar-link.active, .sidebar-link:hover { background: var(--mist); color: var(--dark); }
+.app-main { min-width: 0; }
+.sidebar-toggle { display: none; }
+
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar-toggle { display: block; position: fixed; left: 10px; bottom: 10px; z-index: 150; background: var(--dark); color: #fff; border: none; padding: 10px 12px; }
+  .app-sidebar { position: fixed; left: -240px; top: 64px; width: 220px; z-index: 140; transition: left .2s; box-shadow: 0 8px 30px rgba(0,0,0,.2); }
+  .app-sidebar.open { left: 0; }
+}
