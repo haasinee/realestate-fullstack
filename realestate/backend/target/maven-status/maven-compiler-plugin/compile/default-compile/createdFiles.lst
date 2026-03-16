@@ -1,0 +1,4 @@
+com\realestate\entity\User$Role.class
+com\realestate\repository\UserRepository.class
+com\realestate\RealEstateApplication.class
+com\realestate\entity\User.class
