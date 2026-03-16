@@ -18,6 +18,9 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "property_name", length = 200)
+    private String propertyName;
+
     @Column(nullable = false, length = 200)
     private String title;
 
@@ -34,6 +37,12 @@ public class Property {
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
+
+    @Column(length = 255)
+    private String location;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 
     @Column(name = "area_sqft")
     private Integer areaSqft;

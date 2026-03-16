@@ -25,21 +25,21 @@ export default function PropertyCard({ property, index = 0 }) {
     <div className="prop-card" onClick={() => navigate(`/property/${property.id}`)}>
       <div className="prop-img">
         {property.imageUrls?.length > 0 ? (
-          <img src={property.imageUrls[0]} alt={property.title}
+          <img src={property.imageUrls[0]} alt={property.propertyName || property.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <div style={{ background: gradient, width: '100%', height: '100%',
             display: 'flex', alignItems: 'flex-end', padding: '16px' }}>
             <span style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: '13px',
-              color: 'rgba(255,255,255,0.6)', fontWeight: 300 }}>{property.city}</span>
+              color: 'rgba(255,255,255,0.6)', fontWeight: 300 }}>{property.location || property.city}</span>
           </div>
         )}
         <div className="prop-badge">{property.isFeatured ? 'Featured' : property.propertyType}</div>
       </div>
       <div className="prop-body">
         <div className="prop-price">{formatPrice(property.price)}</div>
-        <div className="prop-name">{property.title}</div>
-        <div className="prop-loc">📍 {property.city}, {property.state}</div>
+        <div className="prop-name">{property.propertyName || property.title}</div>
+        <div className="prop-loc">📍 {property.location || property.city}, {property.state}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
           <span className="stars">{'★'.repeat(stars)}{'☆'.repeat(5 - stars)}</span>
           <span style={{ fontSize: '12px', color: '#999' }}>{rating} ({property.reviewCount || 0})</span>
@@ -52,6 +52,9 @@ export default function PropertyCard({ property, index = 0 }) {
             <span className="tag tag-active">{property.propertyType}</span>
           </span>
         </div>
+        <button className="btn btn-outline" style={{ width: '100%', marginTop: '10px' }} onClick={(e) => { e.stopPropagation(); navigate(`/property/${property.id}`); }}>
+          View Details
+        </button>
       </div>
     </div>
   );
