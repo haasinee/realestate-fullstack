@@ -105,6 +105,7 @@ Frontend starts at `http://localhost:3000` and proxies API calls to `:8080`.
 |--------|---------------------|--------|---------------------|
 | POST   | /api/auth/login     | Public | Login, returns JWT  |
 | POST   | /api/auth/register  | Public | Register new user   |
+| GET    | /api/users/profile  | User   | Logged-in user profile with bookings/reviews |
 
 ### Properties
 | Method | Endpoint                     | Access | Description             |
@@ -146,6 +147,9 @@ Frontend starts at `http://localhost:3000` and proxies API calls to `:8080`.
 - Filter by property type (Apartment, Villa, Penthouse, Commercial)
 - Sort by price (asc/desc) and rating
 - View detailed property information with specs & amenities
+- Google Maps embed on property details
+- Sidebar navigation with quick links
+- User profile page showing bookings and reviews
 - Book property visits with date/time selection
 - View and cancel personal bookings
 - Submit star ratings and written reviews

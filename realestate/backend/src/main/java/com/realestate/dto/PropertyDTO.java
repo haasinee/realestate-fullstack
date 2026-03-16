@@ -28,6 +28,8 @@ public class PropertyDTO {
         private String city;
         private String state;
         private String pincode;
+        private Double latitude;
+        private Double longitude;
         private String amenities;
         private Boolean isFeatured = false;
         private String agentName;
@@ -51,6 +53,8 @@ public class PropertyDTO {
         private String city;
         private String state;
         private String pincode;
+        private Double latitude;
+        private Double longitude;
         private String amenities;
         private Boolean isFeatured;
         private String agentName;

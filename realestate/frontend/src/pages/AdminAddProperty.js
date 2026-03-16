@@ -6,7 +6,7 @@ import { useToast } from '../components/Toast';
 const EMPTY = {
   title: '', description: '', propertyType: 'APARTMENT', price: '',
   areaSqft: '', bedrooms: '', bathrooms: '', floorNumber: '', yearBuilt: '',
-  address: '', city: '', state: '', pincode: '',
+  address: '', city: '', state: '', pincode: '', latitude: '', longitude: '',
   amenities: '', isFeatured: false, agentName: '', agentPhone: '',
 };
 
@@ -31,7 +31,7 @@ export default function AdminAddProperty() {
           areaSqft: p.areaSqft || '', bedrooms: p.bedrooms || '',
           bathrooms: p.bathrooms || '', floorNumber: p.floorNumber || '',
           yearBuilt: p.yearBuilt || '', address: p.address || '',
-          city: p.city || '', state: p.state || '', pincode: p.pincode || '',
+          city: p.city || '', state: p.state || '', pincode: p.pincode || '', latitude: p.latitude || '', longitude: p.longitude || '',
           amenities: p.amenities || '', isFeatured: p.isFeatured || false,
           agentName: p.agentName || '', agentPhone: p.agentPhone || '',
         });
@@ -57,6 +57,8 @@ export default function AdminAddProperty() {
         bathrooms: Number(form.bathrooms) || 0,
         floorNumber: Number(form.floorNumber) || null,
         yearBuilt: Number(form.yearBuilt) || null,
+        latitude: form.latitude ? Number(form.latitude) : null,
+        longitude: form.longitude ? Number(form.longitude) : null,
       };
       let savedId;
       if (isEdit) {
@@ -164,6 +166,8 @@ export default function AdminAddProperty() {
           <F label="City" field="city" placeholder="Hyderabad" />
           <F label="State" field="state" placeholder="Telangana" />
           <F label="Pincode" field="pincode" placeholder="500034" />
+          <F label="Latitude" field="latitude" type="number" placeholder="17.4123" />
+          <F label="Longitude" field="longitude" type="number" placeholder="78.4483" />
           <div className="form-group" style={{ marginBottom: 0, gridColumn: '1/-1' }}>
             <label className="form-label">Amenities (comma-separated)</label>
             <input className="form-control" placeholder="Pool, Gym, Parking, Gym, Smart Home" value={form.amenities} onChange={set('amenities')} />

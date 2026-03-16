@@ -17,8 +17,9 @@ export default function Navbar() {
         <Link to="/" className="navbar-brand">PREMI<span>UM</span> ESTATES</Link>
 
         <div className="navbar-links">
-          <Link to="/" className="nav-link">Properties</Link>
+          <Link to="/properties" className="nav-link">Properties</Link>
           {user && <Link to="/bookings" className="nav-link">My Bookings</Link>}
+          {user && <Link to="/profile" className="nav-link">Profile</Link>}
           {user?.role === 'ADMIN' && <Link to="/admin" className="nav-link">Admin</Link>}
         </div>
 
