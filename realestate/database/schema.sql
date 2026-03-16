@@ -22,11 +22,14 @@ CREATE TABLE users (
 -- PROPERTIES TABLE
 CREATE TABLE properties (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    property_name VARCHAR(200),
     title VARCHAR(200) NOT NULL,
     description TEXT,
     property_type ENUM('APARTMENT','VILLA','PENTHOUSE','COMMERCIAL') NOT NULL,
     status ENUM('ACTIVE','SOLD','PENDING') DEFAULT 'ACTIVE',
     price DECIMAL(15,2) NOT NULL,
+    location VARCHAR(255),
+    image_url VARCHAR(500),
     area_sqft INT,
     bedrooms INT DEFAULT 0,
     bathrooms INT DEFAULT 0,
@@ -98,13 +101,13 @@ INSERT INTO users (first_name, last_name, email, password, phone, role) VALUES
 ('John', 'Doe', 'user@estate.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', '+91 98765 43210', 'USER');
 
 -- Sample properties
-INSERT INTO properties (title, description, property_type, price, area_sqft, bedrooms, bathrooms, floor_number, year_built, address, city, state, pincode, amenities, is_featured, agent_name, agent_phone, created_by) VALUES
-('Skyline Penthouse', 'An unparalleled living experience perched atop one of Hyderabad''s most prestigious towers with sweeping views of the city skyline.', 'PENTHOUSE', 42000000, 4200, 4, 4, 32, 2022, 'Banjara Hills Road No. 12', 'Hyderabad', 'Telangana', '500034', 'Pool,Gym,Concierge,Parking,Terrace,Smart Home', TRUE, 'Arjun Sharma', '+91 98765 43210', 1),
-('The Greenfield Villa', 'A magnificent private villa set within beautifully landscaped grounds offering the ultimate in luxury family living.', 'VILLA', 28500000, 5800, 5, 4, 2, 2021, 'Road No. 36, Jubilee Hills', 'Hyderabad', 'Telangana', '500033', 'Garden,Pool,Home Theatre,Servant Quarters,3-Car Garage', TRUE, 'Priya Reddy', '+91 87654 32109', 1),
-('Marina Heights 802', 'Sophisticated urban living in the heart of Hyderabad''s tech corridor with contemporary interiors.', 'APARTMENT', 14500000, 2100, 3, 2, 8, 2023, 'Madhapur Main Road', 'Hyderabad', 'Telangana', '500081', 'Gym,Clubhouse,Security,Power Backup,Swimming Pool', FALSE, 'Rahul Mehta', '+91 76543 21098', 1),
-('Serene Valley Retreat', 'A truly exceptional countryside estate offering absolute privacy and tranquility.', 'VILLA', 36000000, 7200, 6, 5, 2, 2020, 'Shamirpet Road', 'Hyderabad', 'Telangana', '500078', '5 Acres Land,Organic Farm,Guest Cottage,Tennis Court', TRUE, 'Kavitha Singh', '+91 65432 10987', 1),
-('The Diplomat Suite', 'Residence of the highest calibre in Hyderabad''s premier address, a duplex penthouse with panoramic views.', 'PENTHOUSE', 51000000, 3600, 3, 3, 40, 2023, 'HITEC City Main Road', 'Hyderabad', 'Telangana', '500081', 'Butler Service,Sky Lounge,Wine Cellar,Private Elevator', TRUE, 'Vikram Nair', '+91 54321 09876', 1),
-('Prestige Office Space', 'Premium Grade A commercial space in the most sought-after business district.', 'COMMERCIAL', 89000000, 12000, 0, 8, 15, 2022, 'HITEC City, Cyberabad', 'Hyderabad', 'Telangana', '500081', 'Grade A Office,24/7 Security,Conference Rooms,Cafeteria', FALSE, 'Deepa Iyer', '+91 43210 98765', 1);
+INSERT INTO properties (property_name, title, description, property_type, price, location, image_url, area_sqft, bedrooms, bathrooms, floor_number, year_built, address, city, state, pincode, amenities, is_featured, agent_name, agent_phone, created_by) VALUES
+('Skyline Penthouse', 'Skyline Penthouse', 'An unparalleled living experience perched atop one of Hyderabad''s most prestigious towers with sweeping views of the city skyline.', 'PENTHOUSE', 42000000, 'Banjara Hills, Hyderabad', '/uploads/sample-skyline.jpg', 4200, 4, 4, 32, 2022, 'Banjara Hills Road No. 12', 'Hyderabad', 'Telangana', '500034', 'Pool,Gym,Concierge,Parking,Terrace,Smart Home', TRUE, 'Arjun Sharma', '+91 98765 43210', 1),
+('The Greenfield Villa', 'The Greenfield Villa', 'A magnificent private villa set within beautifully landscaped grounds offering the ultimate in luxury family living.', 'VILLA', 28500000, 'Jubilee Hills, Hyderabad', '/uploads/sample-greenfield.jpg', 5800, 5, 4, 2, 2021, 'Road No. 36, Jubilee Hills', 'Hyderabad', 'Telangana', '500033', 'Garden,Pool,Home Theatre,Servant Quarters,3-Car Garage', TRUE, 'Priya Reddy', '+91 87654 32109', 1),
+('Marina Heights 802', 'Marina Heights 802', 'Sophisticated urban living in the heart of Hyderabad''s tech corridor with contemporary interiors.', 'APARTMENT', 14500000, 'Madhapur, Hyderabad', '/uploads/sample-marina.jpg', 2100, 3, 2, 8, 2023, 'Madhapur Main Road', 'Hyderabad', 'Telangana', '500081', 'Gym,Clubhouse,Security,Power Backup,Swimming Pool', FALSE, 'Rahul Mehta', '+91 76543 21098', 1),
+('Serene Valley Retreat', 'Serene Valley Retreat', 'A truly exceptional countryside estate offering absolute privacy and tranquility.', 'VILLA', 36000000, 'Shamirpet, Hyderabad', '/uploads/sample-serene.jpg', 7200, 6, 5, 2, 2020, 'Shamirpet Road', 'Hyderabad', 'Telangana', '500078', '5 Acres Land,Organic Farm,Guest Cottage,Tennis Court', TRUE, 'Kavitha Singh', '+91 65432 10987', 1),
+('The Diplomat Suite', 'The Diplomat Suite', 'Residence of the highest calibre in Hyderabad''s premier address, a duplex penthouse with panoramic views.', 'PENTHOUSE', 51000000, 'HITEC City, Hyderabad', '/uploads/sample-diplomat.jpg', 3600, 3, 3, 40, 2023, 'HITEC City Main Road', 'Hyderabad', 'Telangana', '500081', 'Butler Service,Sky Lounge,Wine Cellar,Private Elevator', TRUE, 'Vikram Nair', '+91 54321 09876', 1),
+('Prestige Office Space', 'Prestige Office Space', 'Premium Grade A commercial space in the most sought-after business district.', 'COMMERCIAL', 89000000, 'Cyberabad, Hyderabad', '/uploads/sample-office.jpg', 12000, 0, 8, 15, 2022, 'HITEC City, Cyberabad', 'Hyderabad', 'Telangana', '500081', 'Grade A Office,24/7 Security,Conference Rooms,Cafeteria', FALSE, 'Deepa Iyer', '+91 43210 98765', 1);
 
 -- Sample reviews
 INSERT INTO reviews (property_id, user_id, rating, comment) VALUES

@@ -40,14 +40,11 @@ public class PropertyService {
         return toResponse(p);
     }
 
-    public List<PropertyDTO.Response> search(String city, String type,
+    public List<PropertyDTO.Response> search(String name, String location,
                                               BigDecimal minPrice, BigDecimal maxPrice) {
-        String cityParam = (city != null) ? city : "";
-        Property.PropertyType pType = null;
-        if (type != null && !type.isBlank()) {
-            pType = Property.PropertyType.valueOf(type.toUpperCase());
-        }
-        return propertyRepository.searchProperties(cityParam, pType, minPrice, maxPrice)
+        String nameParam = (name != null) ? name.trim() : "";
+        String locationParam = (location != null) ? location.trim() : "";
+        return propertyRepository.searchProperties(nameParam, locationParam, minPrice, maxPrice)
                 .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
@@ -59,10 +56,13 @@ public class PropertyService {
     public PropertyDTO.Response create(PropertyDTO.CreateRequest req, String email) {
         User admin = userRepository.findByEmail(email).orElseThrow();
         Property p = Property.builder()
-                .title(req.getTitle())
+                .title((req.getTitle() != null && !req.getTitle().isBlank()) ? req.getTitle() : req.getPropertyName())
+                .propertyName(req.getPropertyName())
                 .description(req.getDescription())
-                .propertyType(req.getPropertyType())
+                .propertyType(req.getPropertyType() != null ? req.getPropertyType() : Property.PropertyType.APARTMENT)
                 .price(req.getPrice())
+                .location(req.getLocation())
+                .imageUrl(req.getImageUrl())
                 .areaSqft(req.getAreaSqft())
                 .bedrooms(req.getBedrooms() != null ? req.getBedrooms() : 0)
                 .bathrooms(req.getBathrooms() != null ? req.getBathrooms() : 0)
@@ -87,10 +87,13 @@ public class PropertyService {
     public PropertyDTO.Response update(Long id, PropertyDTO.CreateRequest req) {
         Property p = propertyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Property not found"));
-        p.setTitle(req.getTitle());
+        p.setTitle((req.getTitle() != null && !req.getTitle().isBlank()) ? req.getTitle() : req.getPropertyName());
+        p.setPropertyName(req.getPropertyName());
         p.setDescription(req.getDescription());
-        p.setPropertyType(req.getPropertyType());
+        p.setPropertyType(req.getPropertyType() != null ? req.getPropertyType() : Property.PropertyType.APARTMENT);
         p.setPrice(req.getPrice());
+        p.setLocation(req.getLocation());
+        p.setImageUrl(req.getImageUrl());
         p.setAreaSqft(req.getAreaSqft());
         p.setBedrooms(req.getBedrooms() != null ? req.getBedrooms() : 0);
         p.setBathrooms(req.getBathrooms() != null ? req.getBathrooms() : 0);
@@ -122,6 +125,10 @@ public class PropertyService {
         Path filePath = uploadPath.resolve(filename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         String imageUrl = "/uploads/" + filename;
+        if (isPrimary) {
+            property.setImageUrl(imageUrl);
+            propertyRepository.save(property);
+        }
         PropertyImage img = PropertyImage.builder()
                 .property(property)
                 .imageUrl(imageUrl)
@@ -143,10 +150,13 @@ public class PropertyService {
         PropertyDTO.Response r = new PropertyDTO.Response();
         r.setId(p.getId());
         r.setTitle(p.getTitle());
+        r.setPropertyName(p.getPropertyName() != null ? p.getPropertyName() : p.getTitle());
         r.setDescription(p.getDescription());
         r.setPropertyType(p.getPropertyType().name());
         r.setStatus(p.getStatus().name());
         r.setPrice(p.getPrice());
+        r.setLocation(p.getLocation() != null ? p.getLocation() : p.getCity());
+        r.setImageUrl(p.getImageUrl());
         r.setAreaSqft(p.getAreaSqft());
         r.setBedrooms(p.getBedrooms());
         r.setBathrooms(p.getBathrooms());

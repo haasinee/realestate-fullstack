@@ -41,11 +41,14 @@ public class PropertyController {
 
     @GetMapping("/search")
     public ResponseEntity<List<PropertyDTO.Response>> search(
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
             @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice) {
-        return ResponseEntity.ok(propertyService.search(city, type, minPrice, maxPrice));
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String q) {
+        String nameParam = (name != null && !name.isBlank()) ? name : q;
+        String locationParam = location;
+        return ResponseEntity.ok(propertyService.search(nameParam, locationParam, minPrice, maxPrice));
     }
 
     @GetMapping("/keyword")
