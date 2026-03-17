@@ -6,7 +6,7 @@ import PropertyList from '../components/PropertyList';
 export default function Home() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ name: '', location: '', minPrice: '', maxPrice: '' });
+  const [filters, setFilters] = useState({ name: '', location: '', minPrice: '', maxPrice: '', propertyType: '' });
   const [sortBy, setSortBy] = useState('');
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function Home() {
       if (filters.location.trim()) params.location = filters.location.trim();
       if (filters.minPrice) params.minPrice = Number(filters.minPrice);
       if (filters.maxPrice) params.maxPrice = Number(filters.maxPrice);
+      if (filters.propertyType) params.propertyType = filters.propertyType;
       const res = await searchProperties(params);
       setProperties(res.data);
     } catch (e) {

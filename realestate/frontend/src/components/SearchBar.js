@@ -19,6 +19,18 @@ export default function SearchBar({ filters, setFilters, onSearch, loading }) {
         onChange={update('location')}
         onKeyDown={(e) => e.key === 'Enter' && onSearch()}
       />
+
+      <select
+        style={{ border: 'none', borderLeft: '1px solid var(--border)', outline: 'none', padding: '10px 12px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', width: '150px' }}
+        value={filters.propertyType}
+        onChange={update('propertyType')}
+      >
+        <option value="">All Types</option>
+        <option value="APARTMENT">Apartment</option>
+        <option value="VILLA">Villa</option>
+        <option value="PENTHOUSE">Penthouse</option>
+        <option value="COMMERCIAL">Commercial</option>
+      </select>
       <input
         type="number"
         placeholder="Min ₹"

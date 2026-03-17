@@ -34,6 +34,19 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     );
 
     @Query("SELECT p FROM Property p WHERE " +
+            "(:location = '' OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :location, '%')) OR LOWER(COALESCE(p.city, '')) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
+            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
+            "(:propertyType IS NULL OR p.propertyType = :propertyType) AND " +
+            "p.status = 'ACTIVE'")
+    List<Property> searchByLocationAndPriceAndType(
+            @Param("location") String location,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("propertyType") Property.PropertyType propertyType
+    );
+
+    @Query("SELECT p FROM Property p WHERE " +
             "(LOWER(p.propertyName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +

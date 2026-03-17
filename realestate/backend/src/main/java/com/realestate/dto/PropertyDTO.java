@@ -29,7 +29,7 @@ public class PropertyDTO {
         private Double longitude;
 
         private Property.PropertyType propertyType = Property.PropertyType.APARTMENT;
-        private Integer areaSqft;
+        private Integer area;
         private Integer bedrooms = 0;
         private Integer bathrooms = 0;
         private Integer floorNumber;
@@ -55,7 +55,7 @@ public class PropertyDTO {
         private BigDecimal price;
         private String location;
         private String imageUrl;
-        private Integer areaSqft;
+        private Integer area;
         private Integer bedrooms;
         private Integer bathrooms;
         private Integer floorNumber;

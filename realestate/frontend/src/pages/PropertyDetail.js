@@ -129,7 +129,7 @@ export default function PropertyDetail() {
           <div style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px', marginBottom: '16px' }}>
               <span style={{ fontFamily: 'Cormorant Garamond,serif', fontSize: '42px', fontWeight: 400 }}>{formatPrice(property.price)}</span>
-              {property.areaSqft && <span style={{ fontSize: '13px', color: '#999' }}>₹{Math.round((property.price) / property.areaSqft).toLocaleString()}/sqft</span>}
+              {(property.area || property.areaSqft) && <span style={{ fontSize: '13px', color: '#999' }}>₹{Math.round((property.price) / (property.area || property.areaSqft)).toLocaleString()}/sqft</span>}
             </div>
             <p style={{ fontSize: '14px', color: 'var(--slate)', lineHeight: 1.8 }}>{property.description}</p>
           </div>
@@ -141,7 +141,7 @@ export default function PropertyDetail() {
               {[
                 property.bedrooms > 0 && ['Bedrooms', property.bedrooms],
                 ['Bathrooms', property.bathrooms],
-                property.areaSqft && ['Total Area', `${property.areaSqft.toLocaleString()} sqft`],
+                (property.area || property.areaSqft) && ['Total Area', `${(property.area || property.areaSqft).toLocaleString()} sqft`],
                 property.floorNumber && ['Floor', `${property.floorNumber}${property.propertyType === 'COMMERCIAL' ? ' Floors' : 'th Floor'}`],
                 property.yearBuilt && ['Year Built', property.yearBuilt],
                 ['Property Type', property.propertyType],

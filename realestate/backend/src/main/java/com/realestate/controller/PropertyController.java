@@ -1,6 +1,7 @@
 package com.realestate.controller;
 
 import com.realestate.dto.PropertyDTO;
+import com.realestate.entity.Property;
 import com.realestate.service.PropertyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +33,8 @@ public class PropertyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(propertyService.getById(id));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<PropertyDTO.Response> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(propertyService.getById(id));
     }
 
     @GetMapping("/search")
@@ -45,10 +43,11 @@ public class PropertyController {
             @RequestParam(required = false) String location,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Property.PropertyType propertyType,
             @RequestParam(required = false) String q) {
         String nameParam = (name != null && !name.isBlank()) ? name : q;
         String locationParam = location;
-        return ResponseEntity.ok(propertyService.search(nameParam, locationParam, minPrice, maxPrice));
+        return ResponseEntity.ok(propertyService.search(nameParam, locationParam, minPrice, maxPrice, propertyType));
     }
 
     @GetMapping("/keyword")
@@ -59,24 +58,16 @@ public class PropertyController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> create(@Valid @RequestBody PropertyDTO.CreateRequest req,
+    public ResponseEntity<PropertyDTO.Response> create(@Valid @RequestBody PropertyDTO.CreateRequest req,
                                      Authentication auth) {
-        try {
-            return ResponseEntity.ok(propertyService.create(req, auth.getName()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(propertyService.create(req, auth.getName()));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@PathVariable Long id,
+    public ResponseEntity<PropertyDTO.Response> update(@PathVariable Long id,
                                      @Valid @RequestBody PropertyDTO.CreateRequest req) {
-        try {
-            return ResponseEntity.ok(propertyService.update(id, req));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(propertyService.update(id, req));
     }
 
     @DeleteMapping("/{id}")
@@ -88,15 +79,11 @@ public class PropertyController {
 
     @PostMapping("/{id}/images")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> uploadImage(@PathVariable Long id,
+    public ResponseEntity<Map<String, String>> uploadImage(@PathVariable Long id,
                                           @RequestParam("file") MultipartFile file,
-                                          @RequestParam(defaultValue = "false") boolean isPrimary) {
-        try {
-            String url = propertyService.uploadImage(id, file, isPrimary);
-            return ResponseEntity.ok(Map.of("imageUrl", url));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+                                          @RequestParam(defaultValue = "false") boolean isPrimary) throws IOException {
+        String url = propertyService.uploadImage(id, file, isPrimary);
+        return ResponseEntity.ok(Map.of("imageUrl", url));
     }
 
     @GetMapping("/stats")

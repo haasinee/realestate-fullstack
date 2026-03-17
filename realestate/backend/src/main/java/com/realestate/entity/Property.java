@@ -44,8 +44,8 @@ public class Property {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    @Column(name = "area_sqft")
-    private Integer areaSqft;
+    @Column(name = "area")
+    private Integer area;
 
     @Column(nullable = false)
     private Integer bedrooms = 0;

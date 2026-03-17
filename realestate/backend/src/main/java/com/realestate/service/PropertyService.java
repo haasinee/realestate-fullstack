@@ -2,6 +2,7 @@ package com.realestate.service;
 
 import com.realestate.dto.PropertyDTO;
 import com.realestate.entity.*;
+import com.realestate.exception.ResourceNotFoundException;
 import com.realestate.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,16 +37,27 @@ public class PropertyService {
 
     public PropertyDTO.Response getById(Long id) {
         Property p = propertyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Property not found"));
         return toResponse(p);
     }
 
     public List<PropertyDTO.Response> search(String name, String location,
-                                              BigDecimal minPrice, BigDecimal maxPrice) {
+                                              BigDecimal minPrice, BigDecimal maxPrice,
+                                              Property.PropertyType propertyType) {
         String nameParam = (name != null) ? name.trim() : "";
         String locationParam = (location != null) ? location.trim() : "";
-        return propertyRepository.searchProperties(nameParam, locationParam, minPrice, maxPrice)
-                .stream().map(this::toResponse).collect(Collectors.toList());
+        List<Property> results;
+
+        if (!nameParam.isEmpty()) {
+            results = propertyRepository.searchProperties(nameParam, locationParam, minPrice, maxPrice);
+            if (propertyType != null) {
+                results = results.stream().filter(p -> p.getPropertyType() == propertyType).collect(Collectors.toList());
+            }
+        } else {
+            results = propertyRepository.searchByLocationAndPriceAndType(locationParam, minPrice, maxPrice, propertyType);
+        }
+
+        return results.stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     public List<PropertyDTO.Response> searchByKeyword(String keyword) {
@@ -63,7 +75,7 @@ public class PropertyService {
                 .price(req.getPrice())
                 .location(req.getLocation())
                 .imageUrl(req.getImageUrl())
-                .areaSqft(req.getAreaSqft())
+                .area(req.getArea())
                 .bedrooms(req.getBedrooms() != null ? req.getBedrooms() : 0)
                 .bathrooms(req.getBathrooms() != null ? req.getBathrooms() : 0)
                 .floorNumber(req.getFloorNumber())
@@ -86,7 +98,7 @@ public class PropertyService {
 
     public PropertyDTO.Response update(Long id, PropertyDTO.CreateRequest req) {
         Property p = propertyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Property not found"));
         p.setTitle((req.getTitle() != null && !req.getTitle().isBlank()) ? req.getTitle() : req.getPropertyName());
         p.setPropertyName(req.getPropertyName());
         p.setDescription(req.getDescription());
@@ -94,7 +106,7 @@ public class PropertyService {
         p.setPrice(req.getPrice());
         p.setLocation(req.getLocation());
         p.setImageUrl(req.getImageUrl());
-        p.setAreaSqft(req.getAreaSqft());
+        p.setArea(req.getArea());
         p.setBedrooms(req.getBedrooms() != null ? req.getBedrooms() : 0);
         p.setBathrooms(req.getBathrooms() != null ? req.getBathrooms() : 0);
         p.setFloorNumber(req.getFloorNumber());
@@ -118,7 +130,7 @@ public class PropertyService {
 
     public String uploadImage(Long propertyId, MultipartFile file, boolean isPrimary) throws IOException {
         Property property = propertyRepository.findById(propertyId)
-                .orElseThrow(() -> new RuntimeException("Property not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Property not found"));
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         Files.createDirectories(uploadPath);
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -157,7 +169,7 @@ public class PropertyService {
         r.setPrice(p.getPrice());
         r.setLocation(p.getLocation() != null ? p.getLocation() : p.getCity());
         r.setImageUrl(p.getImageUrl());
-        r.setAreaSqft(p.getAreaSqft());
+        r.setArea(p.getArea());
         r.setBedrooms(p.getBedrooms());
         r.setBathrooms(p.getBathrooms());
         r.setFloorNumber(p.getFloorNumber());
