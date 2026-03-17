@@ -24,8 +24,8 @@ export default function PropertyCard({ property, index = 0 }) {
   return (
     <div className="prop-card" onClick={() => navigate(`/property/${property.id}`)}>
       <div className="prop-img">
-        {property.imageUrls?.length > 0 ? (
-          <img src={property.imageUrls[0]} alt={property.propertyName || property.title}
+        {(property.imageUrls?.length > 0 || property.imageUrl) ? (
+          <img src={property.imageUrls?.[0] || property.imageUrl} alt={property.propertyName || property.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <div style={{ background: gradient, width: '100%', height: '100%',

@@ -44,24 +44,31 @@ public class PropertyService {
     public List<PropertyDTO.Response> search(String name, String location,
                                               BigDecimal minPrice, BigDecimal maxPrice,
                                               Property.PropertyType propertyType) {
-        String nameParam = (name != null) ? name.trim() : "";
-        String locationParam = (location != null) ? location.trim() : "";
-        List<Property> results;
+        String nameParam = (name == null) ? null : name.trim();
+        String locationParam = (location == null) ? null : location.trim();
 
-        if (!nameParam.isEmpty()) {
-            results = propertyRepository.searchProperties(nameParam, locationParam, minPrice, maxPrice);
-            if (propertyType != null) {
-                results = results.stream().filter(p -> p.getPropertyType() == propertyType).collect(Collectors.toList());
-            }
-        } else {
-            results = propertyRepository.searchByLocationAndPriceAndType(locationParam, minPrice, maxPrice, propertyType);
+        boolean noFilters = (nameParam == null || nameParam.isEmpty())
+                && (locationParam == null || locationParam.isEmpty())
+                && minPrice == null
+                && maxPrice == null
+                && propertyType == null;
+
+        if (noFilters) {
+            return getAllActive();
         }
 
-        return results.stream().map(this::toResponse).collect(Collectors.toList());
+        return propertyRepository.searchProperties(nameParam, locationParam, minPrice, maxPrice, propertyType, Property.Status.ACTIVE)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public List<PropertyDTO.Response> searchByKeyword(String keyword) {
-        return propertyRepository.findByKeyword(keyword)
+        String keywordParam = keyword == null ? "" : keyword.trim();
+        if (keywordParam.isEmpty()) {
+            return getAllActive();
+        }
+        return propertyRepository.findByKeyword(keywordParam, Property.Status.ACTIVE)
                 .stream().map(this::toResponse).collect(Collectors.toList());
     }
 

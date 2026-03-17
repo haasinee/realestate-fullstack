@@ -14,46 +14,32 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     List<Property> findByStatus(Property.Status status);
 
-    List<Property> findByPropertyType(Property.PropertyType type);
-
     List<Property> findByIsFeaturedTrue();
 
-    List<Property> findByCityIgnoreCase(String city);
-
     @Query("SELECT p FROM Property p WHERE " +
-            "(:name = '' OR LOWER(p.propertyName) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.title) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
-            "(:location = '' OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :location, '%')) OR LOWER(COALESCE(p.city, '')) LIKE LOWER(CONCAT('%', :location, '%')) OR LOWER(COALESCE(p.address, '')) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
+            "(:name IS NULL OR TRIM(:name) = '' OR LOWER(COALESCE(p.propertyName, p.title, '')) LIKE LOWER(CONCAT('%', TRIM(:name), '%')) OR LOWER(COALESCE(p.title, '')) LIKE LOWER(CONCAT('%', TRIM(:name), '%'))) AND " +
+            "(:location IS NULL OR TRIM(:location) = '' OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', TRIM(:location), '%')) OR LOWER(COALESCE(p.city, '')) LIKE LOWER(CONCAT('%', TRIM(:location), '%')) OR LOWER(COALESCE(p.address, '')) LIKE LOWER(CONCAT('%', TRIM(:location), '%'))) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
-            "p.status = 'ACTIVE'")
+            "(:propertyType IS NULL OR p.propertyType = :propertyType) AND " +
+            "p.status = :status")
     List<Property> searchProperties(
             @Param("name") String name,
             @Param("location") String location,
             @Param("minPrice") BigDecimal minPrice,
-            @Param("maxPrice") BigDecimal maxPrice
-    );
-
-    @Query("SELECT p FROM Property p WHERE " +
-            "(:location = '' OR LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :location, '%')) OR LOWER(COALESCE(p.city, '')) LIKE LOWER(CONCAT('%', :location, '%'))) AND " +
-            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
-            "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
-            "(:propertyType IS NULL OR p.propertyType = :propertyType) AND " +
-            "p.status = 'ACTIVE'")
-    List<Property> searchByLocationAndPriceAndType(
-            @Param("location") String location,
-            @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
-            @Param("propertyType") Property.PropertyType propertyType
+            @Param("propertyType") Property.PropertyType propertyType,
+            @Param("status") Property.Status status
     );
 
     @Query("SELECT p FROM Property p WHERE " +
-            "(LOWER(p.propertyName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "(LOWER(COALESCE(p.propertyName, p.title, '')) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(COALESCE(p.title, '')) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(COALESCE(p.location, '')) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(COALESCE(p.city, '')) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(COALESCE(p.address, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
-            "p.status = 'ACTIVE'")
-    List<Property> findByKeyword(@Param("keyword") String keyword);
+            "p.status = :status")
+    List<Property> findByKeyword(@Param("keyword") String keyword, @Param("status") Property.Status status);
 
     long countByStatus(Property.Status status);
 }

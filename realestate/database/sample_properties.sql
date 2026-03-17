@@ -1,0 +1,16 @@
+USE realestate_db;
+
+INSERT INTO properties (
+  property_name, title, description, property_type, status, price, location, image_url,
+  latitude, longitude, area, bedrooms, bathrooms, city, state, created_by
+) VALUES
+('Skyline Penthouse', 'Skyline Penthouse', 'Luxury penthouse with skyline views.', 'PENTHOUSE', 'ACTIVE', 42000000, 'Banjara Hills, Hyderabad', 'https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?auto=format&fit=crop&w=1200&q=80', 17.4126, 78.4347, 4200, 4, 4, 'Hyderabad', 'Telangana', 1),
+('Green Meadows Villa', 'Green Meadows Villa', 'Spacious villa in gated community.', 'VILLA', 'ACTIVE', 28500000, 'Whitefield, Bangalore', 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80', 12.9698, 77.7500, 3800, 4, 3, 'Bangalore', 'Karnataka', 1),
+('Marine Drive Residency', 'Marine Drive Residency', 'Sea-facing apartment near business district.', 'APARTMENT', 'ACTIVE', 31000000, 'Marine Drive, Mumbai', 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80', 18.9440, 72.8237, 2100, 3, 2, 'Mumbai', 'Maharashtra', 1),
+('Tech Park Office Hub', 'Tech Park Office Hub', 'Premium office floors for enterprises.', 'COMMERCIAL', 'ACTIVE', 64000000, 'HITEC City, Hyderabad', 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80', 17.4435, 78.3772, 9000, 0, 6, 'Hyderabad', 'Telangana', 1),
+('Lakeview Apartments', 'Lakeview Apartments', 'Modern apartment with clubhouse and pool.', 'APARTMENT', 'ACTIVE', 17200000, 'Hebbal, Bangalore', 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80', 13.0358, 77.5970, 1850, 3, 2, 'Bangalore', 'Karnataka', 1),
+('Palm Grove Villa', 'Palm Grove Villa', 'Independent villa close to metro and schools.', 'VILLA', 'ACTIVE', 25500000, 'Powai, Mumbai', 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80', 19.1176, 72.9060, 4100, 4, 4, 'Mumbai', 'Maharashtra', 1),
+('City Center Suites', 'City Center Suites', 'Compact apartment ideal for professionals.', 'APARTMENT', 'ACTIVE', 9800000, 'Gachibowli, Hyderabad', 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80', 17.4401, 78.3489, 950, 2, 2, 'Hyderabad', 'Telangana', 1),
+('Royal Crest Penthouse', 'Royal Crest Penthouse', 'Duplex penthouse with private terrace.', 'PENTHOUSE', 'ACTIVE', 39500000, 'Koramangala, Bangalore', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80', 12.9352, 77.6245, 3600, 4, 3, 'Bangalore', 'Karnataka', 1),
+('Harbor Point Offices', 'Harbor Point Offices', 'Commercial workspace with ample parking.', 'COMMERCIAL', 'ACTIVE', 71000000, 'BKC, Mumbai', 'https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1200&q=80', 19.0596, 72.8656, 11000, 0, 8, 'Mumbai', 'Maharashtra', 1),
+('Orchid Residency', 'Orchid Residency', 'Family apartment near IT corridor.', 'APARTMENT', 'ACTIVE', 15800000, 'Madhapur, Hyderabad', 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&fit=crop&w=1200&q=80', 17.4483, 78.3915, 2200, 3, 3, 'Hyderabad', 'Telangana', 1);
