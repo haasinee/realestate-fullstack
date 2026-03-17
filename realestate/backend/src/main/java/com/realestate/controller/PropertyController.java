@@ -45,8 +45,8 @@ public class PropertyController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Property.PropertyType propertyType,
             @RequestParam(required = false) String q) {
-        String nameParam = (name != null && !name.isBlank()) ? name : q;
-        String locationParam = location;
+        String nameParam = (name != null && !name.isBlank()) ? name.trim() : (q != null ? q.trim() : null);
+        String locationParam = (location != null && !location.isBlank()) ? location.trim() : null;
         return ResponseEntity.ok(propertyService.search(nameParam, locationParam, minPrice, maxPrice, propertyType));
     }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropertyCard from './PropertyCard';
 
-export default function PropertyList({ properties, loading }) {
+export default function PropertyList({ properties = [], loading }) {
   if (loading) {
     return <div className="spinner"><div className="spin"></div></div>;
   }
@@ -17,7 +17,9 @@ export default function PropertyList({ properties, loading }) {
 
   return (
     <div className="prop-grid">
-      {properties.map((p, i) => <PropertyCard key={p.id} property={p} index={i} />)}
+      {properties.map((property, index) => (
+        <PropertyCard key={property.id} property={property} index={index} />
+      ))}
     </div>
   );
 }

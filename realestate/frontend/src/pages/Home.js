@@ -16,15 +16,16 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = async (overrideFilters) => {
+    const effectiveFilters = overrideFilters || filters;
     setLoading(true);
     try {
       const params = {};
-      if (filters.name.trim()) params.name = filters.name.trim();
-      if (filters.location.trim()) params.location = filters.location.trim();
-      if (filters.minPrice) params.minPrice = Number(filters.minPrice);
-      if (filters.maxPrice) params.maxPrice = Number(filters.maxPrice);
-      if (filters.propertyType) params.propertyType = filters.propertyType;
+      if ((effectiveFilters.name || "").trim()) params.name = effectiveFilters.name.trim();
+      if ((effectiveFilters.location || "").trim()) params.location = effectiveFilters.location.trim();
+      if (effectiveFilters.minPrice !== "" && effectiveFilters.minPrice !== null) params.minPrice = Number(effectiveFilters.minPrice);
+      if (effectiveFilters.maxPrice !== "" && effectiveFilters.maxPrice !== null) params.maxPrice = Number(effectiveFilters.maxPrice);
+      if (effectiveFilters.propertyType) params.propertyType = effectiveFilters.propertyType;
       const res = await searchProperties(params);
       setProperties(res.data);
     } catch (e) {
