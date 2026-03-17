@@ -11,6 +11,7 @@ export default function Sidebar() {
     { to: '/properties', label: 'Properties' },
     ...(user ? [{ to: '/bookings', label: 'Booking' }, { to: '/profile', label: 'Profile' }] : []),
     ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin' }] : []),
+    ...(!user ? [{ to: '/auth', label: 'Login/Register' }] : []),
   ];
 
   return (

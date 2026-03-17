@@ -47,7 +47,7 @@ export default function PropertyCard({ property, index = 0 }) {
         <div className="prop-features">
           {property.bedrooms > 0 && <span className="prop-feat">🛏 {property.bedrooms} Beds</span>}
           <span className="prop-feat">🚿 {property.bathrooms} Baths</span>
-          {property.areaSqft && <span className="prop-feat">📐 {property.areaSqft.toLocaleString()} sqft</span>}
+          {(property.area || property.areaSqft) && <span className="prop-feat">📐 {(property.area || property.areaSqft).toLocaleString()} sqft</span>}
           <span style={{ marginLeft: 'auto' }}>
             <span className="tag tag-active">{property.propertyType}</span>
           </span>
