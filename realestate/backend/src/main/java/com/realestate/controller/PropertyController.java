@@ -1,13 +1,14 @@
 package com.realestate.controller;
 
+import com.realestate.dto.PropertyCreateRequest;
 import com.realestate.dto.PropertyDTO;
+import com.realestate.dto.PropertyResponse;
 import com.realestate.entity.Property;
 import com.realestate.service.PropertyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -57,10 +58,8 @@ public class PropertyController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PropertyDTO.Response> create(@Valid @RequestBody PropertyDTO.CreateRequest req,
-                                     Authentication auth) {
-        return ResponseEntity.ok(propertyService.create(req, auth.getName()));
+    public ResponseEntity<PropertyResponse> addProperty(@Valid @RequestBody PropertyCreateRequest req) {
+        return ResponseEntity.ok(propertyService.addProperty(req));
     }
 
     @PutMapping("/{id}")
