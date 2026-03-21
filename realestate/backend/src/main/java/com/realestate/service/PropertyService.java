@@ -1,6 +1,8 @@
 package com.realestate.service;
 
+import com.realestate.dto.PropertyCreateRequest;
 import com.realestate.dto.PropertyDTO;
+import com.realestate.dto.PropertyResponse;
 import com.realestate.entity.*;
 import com.realestate.exception.ResourceNotFoundException;
 import com.realestate.repository.*;
@@ -101,6 +103,36 @@ public class PropertyService {
                 .createdBy(admin)
                 .build();
         return toResponse(propertyRepository.save(p));
+    }
+
+
+    public PropertyResponse addProperty(PropertyCreateRequest req) {
+        Property property = Property.builder()
+                .title(req.getTitle().trim())
+                .description(req.getDescription())
+                .price(req.getPrice())
+                .city(req.getCity().trim())
+                .address(req.getAddress().trim())
+                .bedrooms(req.getBedrooms())
+                .bathrooms(req.getBathrooms())
+                .propertyType(req.getPropertyType())
+                .status(req.getStatus())
+                .build();
+
+        Property saved = propertyRepository.save(property);
+        return PropertyResponse.builder()
+                .id(saved.getId())
+                .title(saved.getTitle())
+                .description(saved.getDescription())
+                .price(saved.getPrice())
+                .city(saved.getCity())
+                .address(saved.getAddress())
+                .bedrooms(saved.getBedrooms())
+                .bathrooms(saved.getBathrooms())
+                .propertyType(saved.getPropertyType())
+                .status(saved.getStatus())
+                .createdAt(saved.getCreatedAt())
+                .build();
     }
 
     public PropertyDTO.Response update(Long id, PropertyDTO.CreateRequest req) {
