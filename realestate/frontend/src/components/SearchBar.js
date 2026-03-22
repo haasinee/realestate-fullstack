@@ -14,22 +14,22 @@ export default function SearchBar({ filters, setFilters, onSearch, loading }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ background: '#fff', borderRadius: '2px', padding: '6px', display: 'inline-flex', gap: '6px', maxWidth: '900px', width: '100%', boxShadow: '0 4px 40px rgba(0,0,0,.3)' }}>
+    <form onSubmit={handleSubmit} className="search-bar">
       <input
-        style={{ border: 'none', outline: 'none', padding: '10px 16px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', color: 'var(--dark)', flex: 1, minWidth: 0 }}
+        className="search-field search-grow"
         placeholder="Property name"
         value={filters.name}
         onChange={update('name')}
       />
       <input
-        style={{ border: 'none', borderLeft: '1px solid var(--border)', outline: 'none', padding: '10px 12px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', width: '180px' }}
+        className="search-field"
         placeholder="Location"
         value={filters.location}
         onChange={update('location')}
       />
 
       <select
-        style={{ border: 'none', borderLeft: '1px solid var(--border)', outline: 'none', padding: '10px 12px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', width: '150px' }}
+        className="search-field"
         value={filters.propertyType}
         onChange={update('propertyType')}
       >
@@ -42,14 +42,14 @@ export default function SearchBar({ filters, setFilters, onSearch, loading }) {
       <input
         type="number"
         placeholder="Min ₹"
-        style={{ border: 'none', borderLeft: '1px solid var(--border)', outline: 'none', padding: '10px 12px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', width: '100px' }}
+        className="search-field"
         value={filters.minPrice}
         onChange={update('minPrice')}
       />
       <input
         type="number"
         placeholder="Max ₹"
-        style={{ border: 'none', borderLeft: '1px solid var(--border)', outline: 'none', padding: '10px 12px', fontFamily: 'DM Sans,sans-serif', fontSize: '13px', width: '100px' }}
+        className="search-field"
         value={filters.maxPrice}
         onChange={update('maxPrice')}
       />
