@@ -8,5 +8,6 @@ import java.util.List;
 @Repository
 public interface PropertyImageRepository extends JpaRepository<PropertyImage, Long> {
     List<PropertyImage> findByPropertyId(Long propertyId);
+    List<PropertyImage> findByPropertyIdOrderByIsPrimaryDescIdAsc(Long propertyId);
     void deleteByPropertyId(Long propertyId);
 }

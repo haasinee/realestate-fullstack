@@ -224,10 +224,15 @@ public class PropertyService {
         r.setAgentName(p.getAgentName());
         r.setAgentPhone(p.getAgentPhone());
         r.setCreatedAt(p.getCreatedAt());
-        if (p.getImages() != null) {
-            r.setImageUrls(p.getImages().stream()
-                    .map(PropertyImage::getImageUrl).collect(Collectors.toList()));
+        List<String> imageUrls = imageRepository.findByPropertyIdOrderByIsPrimaryDescIdAsc(p.getId())
+                .stream()
+                .map(PropertyImage::getImageUrl)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        if (imageUrls.isEmpty() && p.getImageUrl() != null && !p.getImageUrl().isBlank()) {
+            imageUrls = List.of(p.getImageUrl());
         }
+        r.setImageUrls(imageUrls);
         r.setAverageRating(reviewRepository.findAverageRatingByPropertyId(p.getId()));
         r.setReviewCount(reviewRepository.countByPropertyId(p.getId()));
         return r;
