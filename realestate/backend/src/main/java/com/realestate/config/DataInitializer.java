@@ -1,7 +1,9 @@
 package com.realestate.config;
 
 import com.realestate.entity.Property;
+import com.realestate.entity.PropertyImage;
 import com.realestate.entity.User;
+import com.realestate.repository.PropertyImageRepository;
 import com.realestate.repository.PropertyRepository;
 import com.realestate.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +17,7 @@ import java.util.List;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner seedProperties(UserRepository userRepository, PropertyRepository propertyRepository) {
+    CommandLineRunner seedProperties(UserRepository userRepository, PropertyRepository propertyRepository, PropertyImageRepository propertyImageRepository) {
         return args -> {
             if (propertyRepository.count() > 0) {
                 return;
@@ -45,7 +47,18 @@ public class DataInitializer {
                     createProperty("Orchid Residency", "Family apartment near IT corridor.", "Madhapur, Hyderabad", new BigDecimal("15800000"), "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&fit=crop&w=1200&q=80", 17.4483, 78.3915, Property.PropertyType.APARTMENT, admin)
             );
 
-            propertyRepository.saveAll(sampleProperties);
+            List<Property> savedProperties = propertyRepository.saveAll(sampleProperties);
+
+            List<PropertyImage> primaryImages = savedProperties.stream()
+                    .filter(property -> property.getImageUrl() != null && !property.getImageUrl().isBlank())
+                    .map(property -> PropertyImage.builder()
+                            .property(property)
+                            .imageUrl(property.getImageUrl())
+                            .isPrimary(Boolean.TRUE)
+                            .build())
+                    .toList();
+
+            propertyImageRepository.saveAll(primaryImages);
         };
     }
 

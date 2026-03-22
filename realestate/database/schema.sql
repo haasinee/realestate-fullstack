@@ -113,6 +113,12 @@ INSERT INTO properties (property_name, title, description, property_type, price,
 ('Downtown Studio Loft', 'Downtown Studio Loft', 'Smart investment-ready studio in a vibrant mixed-use district.', 'APARTMENT', 7200000, 'Gachibowli, Hyderabad', '/uploads/sample-studio.jpg', 780, 1, 1, 11, 2022, 'Gachibowli Central', 'Hyderabad', 'Telangana', '500032', 'Co-working Lounge,Gym,Concierge', FALSE, 'Isha Verma', '+91 92345 67890', 1),
 ('Aurora Business Hub', 'Aurora Business Hub', 'High-yield premium commercial floor with modern infrastructure and parking.', 'COMMERCIAL', 64000000, 'Financial District, Hyderabad', '/uploads/sample-aurora.jpg', 9300, 0, 6, 18, 2023, 'Nanakramguda Main Road', 'Hyderabad', 'Telangana', '500008', 'Conference Center,Smart Access,Cafeteria,Backup Power', TRUE, 'Rohan Malhotra', '+91 93456 78901', 1);
 
+-- Ensure each seeded property has a primary image record in property_images
+INSERT INTO property_images (property_id, image_url, is_primary)
+SELECT id, image_url, TRUE
+FROM properties
+WHERE image_url IS NOT NULL AND image_url <> '';
+
 -- Sample reviews
 INSERT INTO reviews (property_id, user_id, rating, comment) VALUES
 (1, 2, 5, 'The views are absolutely breathtaking. The property management team has been exceptional.'),
