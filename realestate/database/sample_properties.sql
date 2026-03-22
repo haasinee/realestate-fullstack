@@ -14,3 +14,9 @@ INSERT INTO properties (
 ('Royal Crest Penthouse', 'Royal Crest Penthouse', 'Duplex penthouse with private terrace.', 'PENTHOUSE', 'ACTIVE', 39500000, 'Koramangala, Bangalore', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80', 12.9352, 77.6245, 3600, 4, 3, 'Bangalore', 'Karnataka', 1),
 ('Harbor Point Offices', 'Harbor Point Offices', 'Commercial workspace with ample parking.', 'COMMERCIAL', 'ACTIVE', 71000000, 'BKC, Mumbai', 'https://images.unsplash.com/photo-1497215842964-222b430dc094?auto=format&fit=crop&w=1200&q=80', 19.0596, 72.8656, 11000, 0, 8, 'Mumbai', 'Maharashtra', 1),
 ('Orchid Residency', 'Orchid Residency', 'Family apartment near IT corridor.', 'APARTMENT', 'ACTIVE', 15800000, 'Madhapur, Hyderabad', 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?auto=format&fit=crop&w=1200&q=80', 17.4483, 78.3915, 2200, 3, 3, 'Hyderabad', 'Telangana', 1);
+
+
+INSERT INTO property_images (property_id, image_url, is_primary)
+SELECT id, image_url, TRUE
+FROM properties
+WHERE image_url IS NOT NULL AND image_url <> '';

@@ -94,6 +94,9 @@ export default function PropertyDetail() {
 
   const avgRating = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : 'N/A';
   const amenitiesList = property.amenities ? property.amenities.split(',').map(a => a.trim()) : [];
+  const galleryImages = property.imageUrls?.length > 0
+    ? property.imageUrls
+    : (property.imageUrl ? [property.imageUrl] : []);
 
   return (
     <>
@@ -106,8 +109,8 @@ export default function PropertyDetail() {
 
       {/* Hero Image */}
       <div style={{ height: '420px', position: 'relative', overflow: 'hidden' }}>
-        {property.imageUrls?.length > 0 ? (
-          <img src={property.imageUrls[0]} alt={property.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {galleryImages.length > 0 ? (
+          <img src={galleryImages[0]} alt={property.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <div style={{ background: gradient, width: '100%', height: '100%' }} />
         )}
