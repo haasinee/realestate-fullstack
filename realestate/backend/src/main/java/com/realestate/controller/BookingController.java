@@ -1,65 +1,45 @@
 package com.realestate.controller;
 
-import com.realestate.dto.BookingDTO;
+import com.realestate.dto.BookingRequest;
+import com.realestate.entity.Booking;
+import com.realestate.entity.Property;
+import com.realestate.entity.User;
 import com.realestate.service.BookingService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.realestate.service.PropertyService;
+import com.realestate.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
+    private final UserService userService;
+    private final PropertyService propertyService;
+
+    public BookingController(BookingService bookingService, UserService userService, PropertyService propertyService) {
+        this.bookingService = bookingService;
+        this.userService = userService;
+        this.propertyService = propertyService;
+    }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> create(@Valid @RequestBody BookingDTO.CreateRequest req,
-                                     Authentication auth) {
-        try {
-            return ResponseEntity.ok(bookingService.create(req, auth.getName()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest request) {
+        User user = userService.getUserById(request.getUserId()).orElse(null);
+        Property property = propertyService.getPropertyById(request.getPropertyId()).orElse(null);
+
+        if (user == null || property == null) {
+            return ResponseEntity.badRequest().build();
         }
-    }
 
-    @GetMapping("/my")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<BookingDTO.Response>> getMyBookings(Authentication auth) {
-        return ResponseEntity.ok(bookingService.getMyBookings(auth.getName()));
-    }
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setProperty(property);
+        booking.setVisitDate(request.getVisitDate());
+        booking.setVisitTime(request.getVisitTime());
+        booking.setStatus(Booking.BookingStatus.SCHEDULED);
 
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<BookingDTO.Response>> getAll() {
-        return ResponseEntity.ok(bookingService.getAllBookings());
-    }
-
-    @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id,
-                                           @RequestBody BookingDTO.StatusUpdate req) {
-        try {
-            return ResponseEntity.ok(bookingService.updateStatus(id, req.getStatus()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @PutMapping("/{id}/cancel")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> cancel(@PathVariable Long id, Authentication auth) {
-        try {
-            bookingService.cancel(id, auth.getName());
-            return ResponseEntity.ok(Map.of("message", "Booking cancelled"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(bookingService.createBooking(booking));
     }
 }

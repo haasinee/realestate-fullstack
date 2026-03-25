@@ -1,68 +1,56 @@
 package com.realestate.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "bookings")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Booking {
+
+    public enum BookingStatus {
+        SCHEDULED,
+        COMPLETED,
+        CANCELLED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "property_id", nullable = false)
-    private Property property;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "visit_date", nullable = false)
-    private LocalDate visitDate;
+    @ManyToOne
+    @JoinColumn(name = "property_id")
+    private Property property;
 
-    @Column(name = "visit_time", nullable = false)
+    private LocalDate visitDate;
     private LocalTime visitTime;
 
-    @Column(name = "visitor_name", nullable = false, length = 100)
-    private String visitorName;
-
-    @Column(name = "visitor_phone", nullable = false, length = 20)
-    private String visitorPhone;
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private BookingStatus status = BookingStatus.PENDING;
+    private BookingStatus status;
 
-    @Column(columnDefinition = "TEXT")
-    private String notes;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public enum BookingStatus {
-        PENDING, CONFIRMED, CANCELLED, COMPLETED
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Property getProperty() { return property; }
+    public void setProperty(Property property) { this.property = property; }
+    public LocalDate getVisitDate() { return visitDate; }
+    public void setVisitDate(LocalDate visitDate) { this.visitDate = visitDate; }
+    public LocalTime getVisitTime() { return visitTime; }
+    public void setVisitTime(LocalTime visitTime) { this.visitTime = visitTime; }
+    public BookingStatus getStatus() { return status; }
+    public void setStatus(BookingStatus status) { this.status = status; }
 }

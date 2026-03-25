@@ -1,54 +1,46 @@
 package com.realestate.service;
 
-import com.realestate.dto.ReviewDTO;
-import com.realestate.entity.*;
-import com.realestate.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.realestate.entity.Review;
+import com.realestate.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
 
-    @Autowired private ReviewRepository reviewRepository;
-    @Autowired private PropertyRepository propertyRepository;
-    @Autowired private UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
-    public List<ReviewDTO.Response> getByProperty(Long propertyId) {
-        return reviewRepository.findByPropertyId(propertyId)
-                .stream().map(this::toResponse).collect(Collectors.toList());
+    public ReviewService(ReviewRepository reviewRepository) {
+        this.reviewRepository = reviewRepository;
     }
 
-    public ReviewDTO.Response create(ReviewDTO.CreateRequest req, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
-        Property property = propertyRepository.findById(req.getPropertyId())
-                .orElseThrow(() -> new RuntimeException("Property not found"));
-        if (reviewRepository.existsByPropertyIdAndUserId(property.getId(), user.getId())) {
-            throw new RuntimeException("You have already reviewed this property");
-        }
-        Review review = Review.builder()
-                .property(property)
-                .user(user)
-                .rating(req.getRating())
-                .comment(req.getComment())
-                .build();
-        return toResponse(reviewRepository.save(review));
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
     }
 
-    public void delete(Long id) {
+    public Optional<Review> getReviewById(Long id) {
+        return reviewRepository.findById(id);
+    }
+
+    public Review createReview(Review review) {
+        return reviewRepository.save(review);
+    }
+
+    public Review updateReview(Long id, Review updatedReview) {
+        return reviewRepository.findById(id)
+                .map(review -> {
+                    review.setUser(updatedReview.getUser());
+                    review.setProperty(updatedReview.getProperty());
+                    review.setRating(updatedReview.getRating());
+                    review.setComment(updatedReview.getComment());
+                    return reviewRepository.save(review);
+                })
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+    }
+
+    public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
-    }
-
-    private ReviewDTO.Response toResponse(Review r) {
-        ReviewDTO.Response res = new ReviewDTO.Response();
-        res.setId(r.getId());
-        res.setPropertyId(r.getProperty().getId());
-        res.setUserId(r.getUser().getId());
-        res.setUserName(r.getUser().getFirstName() + " " + r.getUser().getLastName());
-        res.setRating(r.getRating());
-        res.setComment(r.getComment());
-        res.setCreatedAt(r.getCreatedAt());
-        return res;
     }
 }
