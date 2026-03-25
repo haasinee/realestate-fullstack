@@ -1,43 +1,44 @@
 package com.realestate.controller;
 
-import com.realestate.dto.ReviewDTO;
+import com.realestate.dto.ReviewRequest;
+import com.realestate.entity.Property;
+import com.realestate.entity.Review;
+import com.realestate.entity.User;
+import com.realestate.service.PropertyService;
 import com.realestate.service.ReviewService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.realestate.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {
 
-    @Autowired
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
+    private final UserService userService;
+    private final PropertyService propertyService;
 
-    @GetMapping("/property/{propertyId}")
-    public ResponseEntity<List<ReviewDTO.Response>> getByProperty(@PathVariable Long propertyId) {
-        return ResponseEntity.ok(reviewService.getByProperty(propertyId));
+    public ReviewController(ReviewService reviewService, UserService userService, PropertyService propertyService) {
+        this.reviewService = reviewService;
+        this.userService = userService;
+        this.propertyService = propertyService;
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> create(@Valid @RequestBody ReviewDTO.CreateRequest req,
-                                     Authentication auth) {
-        try {
-            return ResponseEntity.ok(reviewService.create(req, auth.getName()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
+    public ResponseEntity<Review> createReview(@RequestBody ReviewRequest request) {
+        User user = userService.getUserById(request.getUserId()).orElse(null);
+        Property property = propertyService.getPropertyById(request.getPropertyId()).orElse(null);
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        reviewService.delete(id);
-        return ResponseEntity.ok(Map.of("message", "Review deleted"));
+        if (user == null || property == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Review review = new Review();
+        review.setUser(user);
+        review.setProperty(property);
+        review.setRating(request.getRating());
+        review.setComment(request.getComment());
+
+        return ResponseEntity.ok(reviewService.createReview(review));
     }
 }
